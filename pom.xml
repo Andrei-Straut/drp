@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.andreistraut.drp</groupId>
+    <artifactId>drp-all</artifactId>
+    <name>DynamicReverseProxy</name>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <target-dir-name>target</target-dir-name>
+    </properties>
+    
+    <modules>
+        <module>drp-core</module>
+        <module>drp-local</module>
+        <module>drp-web</module>
+    </modules>
+   
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+
+                        <configuration>
+                            <outputDirectory>${basedir}/${artifactId}/${target-dir-name}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/drp-core/${target-dir-name}</directory>
+                                    <includes>
+                                        <include>**/*.jar</include>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>${basedir}/drp-local/${target-dir-name}</directory>
+                                    <includes>
+                                        <include>**/*.jar</include>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>${basedir}/drp-web/${target-dir-name}</directory>
+                                    <includes>
+                                        <include>**/*.war</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
