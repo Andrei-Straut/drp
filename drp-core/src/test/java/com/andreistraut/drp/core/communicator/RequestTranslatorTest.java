@@ -1818,43 +1818,4 @@ public class RequestTranslatorTest {
 	Assert.assertTrue("Request body did not match expected value", 
 		translator.getBody(translatedRequest).get().equals(TestResource.REQUEST_STRING_VALUE));
     }
-    /** TO TEST: fromJsonString - HTTP Headers, fromJsonString - Map headers, fromFullHttpRequest 
-     From json string:
-     	- null headers							    - done
-     	- headers with content-length					    - done
-     	- null method parameters					    - done
-	- Empty JSON							    - done
-	- Empty String							    - done
-	- Null JSON							    - done
-	- JSON with unknown property names				    - done
-	- JSON without endpoint field					    - done
-	- JSON with null endpoint field					    - done
-	- JSON with empty endpoint field				    - done
-	- JSON with space endpoint field				    - done
-	- JSON with newline endpoint field				    - done
-	- JSON with invalid endpoint field				    - done
-	- JSON without method field					    - done
-	- JSON with null method field					    - done
-	- JSON with empty method field					    - done
-	- JSON with space method field					    - done
-	- JSON with newline method field				    - done
-	- JSON with invalid method field				    - done
-	- JSON object with lowercase / uppercase fields			    - done
-	- JSON with GET request lowercase				    - done
-	- JSON with GET request uppercase				    - done
-	- JSON with GET request camelcase				    - done
-	- JSON with GET request trailing spaces				    - done
-	- JSON with PUT request						    - done
-	- JSON with DELETE request					    - done
-	- GET request without request content				    - done
-	- GET request with request content				    - done
-	- JSON POST request without request content			    - done
-	- JSON POST request with empty request content			    - done
-	- JSON POST request with space request content			    - done
-	- JSON POST request with newline request content		    - done
-	- JSON POST with non-json object and non-json primitive request content - done
-	- JSON POST with JSONArray request content			    - done
-	- JSON POST request with string request content			    - done
-	- JSON POST request with JSON Object request content		    - done
-	*/
 }
