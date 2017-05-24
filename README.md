@@ -11,7 +11,6 @@
 ### What do I need in order to install and run it?
 
 ### What can it do?
-```
 
 ### What can't it do?
 
