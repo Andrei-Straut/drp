@@ -65,10 +65,10 @@ DRP relays requests from your client to the destination endpoint. It supports:
 - For POST requests, there is more control and customization possibilities. Request payload must be a JSON object, with the following format:
 	```json
 	{
-		endpoint: <String> -> the full URL of the remote endpoint (incl. port)
-		method: <String> -> the HTTP method of the request to be forwarded (recommended: All-caps)
-		headers: <JsonObject> -> the request headers to be forwarded (key-value)
-		request: <JsonObject or String> -> the request payload to be forwarded
+		"endpoint": "String - the full URL of the remote endpoint (incl. port)"
+		"method": "String - the HTTP method of the request to be forwarded (recommended: All-caps)"
+		"headers": "JsonObject - the request headers to be forwarded (key-value)"
+		"request": "JsonObject or String - the request payload to be forwarded"
 	}
 	```
 	Of these, only `endpoint` and `method` parameters are mandatory.  
