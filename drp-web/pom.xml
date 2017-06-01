@@ -4,7 +4,7 @@
 
     <groupId>com.andreistraut.drp</groupId>
     <artifactId>drp-web</artifactId>
-	<name>DynamicReverseProxyWeb</name>
+    <name>DynamicReverseProxyWeb</name>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
@@ -22,8 +22,8 @@
         <dependency>
             <groupId>com.andreistraut.drp</groupId>
             <artifactId>drp-core</artifactId>
-			<version>1.0-SNAPSHOT</version>
-			<scope>compile</scope>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
