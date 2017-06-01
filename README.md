@@ -1,7 +1,6 @@
 [![Build Status](https://travis-ci.org/Andrei-Straut/drp.svg?branch=master)](https://travis-ci.org/Andrei-Straut/drp)
 [![Coverage Status](https://coveralls.io/repos/github/Andrei-Straut/drp/badge.svg?branch=master)](https://coveralls.io/github/Andrei-Straut/drp?branch=master)
 
-# Documentation WIP
 # DRP (Dynamic Reverse Proxy)
 
 ## What is it?
@@ -59,11 +58,38 @@ From here, you can start issuing the requests to this endpoint. It will probably
 Deploy the war file `drp-web-1.0-SNAPSHOT.war` to your webserver. From here, you can start issuing the requests to this endpoint. If your webserver is running on port 80, it will probably be located at `http://localhost/drp`
 
 ## What can it do?
+DRP relays requests from your client to the destination endpoint. It supports:
+- GET and POST requests for the DRP endpoint
+- Forwarding of GET, POST, HEAD, OPTIONS and DELETE methods to the remote endpoint
+- For GET requests, headers are automatically forwarded to the destination. There is no request payload possible
+- For POST requests, there is more control and customization possibilities. Request payload must be a JSON object, with the following format:
+	```json
+	{
+		endpoint: <String> -> the full URL of the remote endpoint (incl. port)
+		method: <String> -> the HTTP method of the request to be forwarded (recommended: All-caps)
+		headers: <JsonObject> -> the request headers to be forwarded (key-value)
+		request: <JsonObject or String> -> the request payload to be forwarded
+	}
+	```
+	Of these, only `endpoint` and `method` parameters are mandatory.  
+  
+	If headers are specified in both the JsonObject and RequestTranslator method call, the headers in JsonObject take precedence.  
+  
+	`Request` object can take two forms: JsonObject (key-value), and in this case, the data will be translated as `application/x-www-form-urlencoded` when forwarded, or a simple `string`, which will be the payload of the forwarded request.  
+	If `request` parameter is present, it cannot be empty
 
 ## What can't it do?
+- At the moment, DRP does not support forwarding of request payloads other than `application/text`, `text/plain`, or `application/x-www-form-urlencoded`
+- Only forwarding of GET, POST, HEAD, OPTIONS and DELETE is supported
+- No forwarding of multipart forms or files is supported
+- No type of authentication is supported
 
 ## Do you take contributions / How can I contribute?
+Sure. If you're interested, just get in touch, or simply send me a pull request. And thank you in advance!
 
 ## What are the plans for future development?
+None for now, or none known. DRP already does what I needed it to do, and for me that's enough. If something needs to be supported in the future, I will implement it, but future plans are pretty much undefined at this point.
 
 ## Special thanks
+The [Netty guys](https://github.com/netty/netty) for an awesome lightweight webserver.  
+[Diogo Serra](https://github.com/pdiogomserra) for ideas on how to do this
