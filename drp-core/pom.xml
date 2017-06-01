@@ -4,7 +4,7 @@
     <groupId>com.andreistraut.drp</groupId>
     <artifactId>drp-core</artifactId>
     <name>DynamicReverseProxyCore</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
