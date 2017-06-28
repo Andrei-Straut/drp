@@ -647,8 +647,6 @@ public class RequestTranslatorTest {
 		HttpResponseStatus.OK.code(), 
 		HttpCoreContext.create());
 	
-	exception.expect(IllegalArgumentException.class);
-	exception.expectMessage("Entity may not be null");
 	Assert.assertTrue(
 		"Request body value was present when it shouldn't have been",
 		!translator.getBody(response).isPresent());

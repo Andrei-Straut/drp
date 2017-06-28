@@ -290,6 +290,11 @@ public class RequestTranslator {
      */
     public Optional<String> getBody(HttpResponse response) throws IOException {
 	HttpEntity entity = response.getEntity();
+	
+	if(entity == null) {
+	    return Optional.empty();
+	}
+	
 	Charset charset = CharsetUtil.UTF_8;
 	String responseString = EntityUtils.toString(entity, charset);
 	

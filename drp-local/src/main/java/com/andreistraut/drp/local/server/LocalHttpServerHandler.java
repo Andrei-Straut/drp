@@ -3,6 +3,7 @@ package com.andreistraut.drp.local.server;
 import com.andreistraut.drp.core.communicator.RequestDispatcher;
 import com.andreistraut.drp.core.communicator.RequestTranslator;
 import com.andreistraut.drp.core.model.Messages;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.MalformedJsonException;
@@ -33,12 +34,31 @@ import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.DefaultHttpResponseFactory;
 import org.apache.http.message.BasicHttpResponse;
+import org.apache.http.protocol.HttpCoreContext;
 
 /**
  * Handler for local Netty-based server
  */
 public class LocalHttpServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+	    
+    private final List<String> allowedHttpMethods = Lists.newArrayList(
+	    HttpMethod.HEAD.name(),
+	    HttpMethod.OPTIONS.name(),
+	    HttpMethod.GET.name(),
+	    HttpMethod.POST.name(),
+	    HttpMethod.PATCH.name());
+    
+    private final List<String> allowedHttpHeaders = Lists.newArrayList(
+	    HttpHeaderNames.AUTHORIZATION.toString(),
+	    HttpHeaderNames.CONTENT_TYPE.toString(),
+	    HttpHeaderNames.ACCESS_CONTROL_ALLOW_HEADERS.toString(),
+	    HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN.toString(),
+	    HttpHeaderNames.ACCESS_CONTROL_ALLOW_METHODS.toString(),
+	    "X-Requested-With");
+    
+    private final String ACCESS_CONTROL_MAX_AGE_DURATION = "3600";
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
@@ -48,7 +68,7 @@ public class LocalHttpServerHandler extends SimpleChannelInboundHandler<FullHttp
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws IOException {
 
-	if (request.method() != HttpMethod.POST) {
+	if (request.method() != HttpMethod.POST && request.method() != HttpMethod.OPTIONS) {
 	    HttpResponse response = new BasicHttpResponse(
 		    new ProtocolVersion(
 			    request.protocolVersion().protocolName(),
@@ -62,55 +82,50 @@ public class LocalHttpServerHandler extends SimpleChannelInboundHandler<FullHttp
 
 	Optional<Map<String, String>> requestHeaders = parseHeaders(request);
 	Optional<String> requestContent = parseContent(request);
+	
+	if(request.method() == HttpMethod.OPTIONS) {
+	    HttpResponse response = buildResponseFrame(request, HttpResponseStatus.OK, null);
+	    writeResponse(request, response, ctx);
+	    
+	    return;
+	}
 
 	try {
 	    HttpRequestBase proxyRequest = new RequestTranslator().fromJsonString(
 		    requestHeaders.orElse(null), requestContent.orElse(null));
 	    HttpResponse response = RequestDispatcher.dispatch(proxyRequest);
-
+	    response = addCorsHeadersToResponse(response);
+	    
 	    writeResponse(request, response, ctx);
 
 	} catch(JsonSyntaxException | MalformedJsonException e) {
 	    Logger.getLogger(LocalHttpServerHandler.class.getName()).log(Level.WARNING,
 		    String.format("Invalid JSON Object submitted, exception raised: %s", e.getMessage()), e);
 	    
-	    HttpResponse response = new BasicHttpResponse(
-		    new ProtocolVersion(
-			    request.protocolVersion().protocolName(),
-			    request.protocolVersion().majorVersion(),
-			    request.protocolVersion().minorVersion()),
-		    HttpResponseStatus.FORBIDDEN.code(),
-		    HttpResponseStatus.FORBIDDEN.reasonPhrase());
-	    response.setEntity(new StringEntity(String.format("Invalid JSON Object submitted: %s", e.getMessage())));
+	    HttpResponse response = buildResponseFrame(
+		    request, 
+		    HttpResponseStatus.FORBIDDEN, 
+		    String.format("Invalid JSON Object submitted: %s", e.getMessage()));
 	    writeResponse(request, response, ctx);
 	    
 	} catch (IllegalStateException | IllegalArgumentException e) {
 	    Logger.getLogger(LocalHttpServerHandler.class.getName()).log(Level.WARNING,
 		    String.format("Invalid request content submitted: %s", e.getMessage()), e);
 	    
-	    HttpResponse response = new BasicHttpResponse(
-		    new ProtocolVersion(
-			    request.protocolVersion().protocolName(),
-			    request.protocolVersion().majorVersion(),
-			    request.protocolVersion().minorVersion()),
-		    HttpResponseStatus.FORBIDDEN.code(),
-		    HttpResponseStatus.FORBIDDEN.reasonPhrase());
-	    response.setEntity(new StringEntity(e.getMessage()));
+	    HttpResponse response = buildResponseFrame(
+		    request, 
+		    HttpResponseStatus.FORBIDDEN,
+		    e.getMessage());
 	    writeResponse(request, response, ctx);
 	    
 	} catch(IOException e) {
 	    Logger.getLogger(LocalHttpServerHandler.class.getName()).log(Level.SEVERE,
 		    String.format("Exception raised: %s", e.getMessage()), e);
 	    
-	    HttpResponse response = new BasicHttpResponse(
-		    new ProtocolVersion(
-			    request.protocolVersion().protocolName(),
-			    request.protocolVersion().majorVersion(),
-			    request.protocolVersion().minorVersion()),
-		    HttpResponseStatus.INTERNAL_SERVER_ERROR.code(),
-		    HttpResponseStatus.INTERNAL_SERVER_ERROR.reasonPhrase());
-	    
-	    response.setEntity(new StringEntity(String.format("%s: %s", e.getClass().getSimpleName(), e.getMessage())));
+	    HttpResponse response =  buildResponseFrame(
+		    request, 
+		    HttpResponseStatus.INTERNAL_SERVER_ERROR,
+		    String.format("%s: %s", e.getClass().getSimpleName(), e.getMessage()));
 	    writeResponse(request, response, ctx);
 	}
     }
@@ -167,7 +182,7 @@ public class LocalHttpServerHandler extends SimpleChannelInboundHandler<FullHttp
 
 	FullHttpResponse response = new DefaultFullHttpResponse(
 		HTTP_1_1, HttpResponseStatus.parseLine(proxyResponse.getStatusLine().getStatusCode() + ""),
-		Unpooled.copiedBuffer(translator.getBody(proxyResponse).orElse(""), CharsetUtil.UTF_8));
+		Unpooled.copiedBuffer(messageContent, CharsetUtil.UTF_8));
 
 	for (Header header : proxyResponse.getAllHeaders()) {
 	    response.headers().set(header.getName(), header.getValue());
@@ -186,5 +201,36 @@ public class LocalHttpServerHandler extends SimpleChannelInboundHandler<FullHttp
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 	cause.printStackTrace();
 	ctx.close();
+    }
+    
+    private HttpResponse addCorsHeadersToResponse(HttpResponse response) {
+	response.addHeader(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN.toString(), "*");
+	response.addHeader(HttpHeaderNames.ACCESS_CONTROL_MAX_AGE.toString(), ACCESS_CONTROL_MAX_AGE_DURATION);
+	response.addHeader(HttpHeaderNames.ACCESS_CONTROL_ALLOW_HEADERS.toString(), String.join(",", allowedHttpHeaders));
+	response.addHeader(HttpHeaderNames.ACCESS_CONTROL_ALLOW_METHODS.toString(), String.join(",", allowedHttpMethods));
+	
+	return response;
+    }
+    
+    private HttpResponse buildResponseFrame(FullHttpRequest request, HttpResponseStatus status, String message) throws IOException {
+	
+	HttpResponse response = new BasicHttpResponse(
+		new ProtocolVersion(
+			request.protocolVersion().protocolName(),
+			request.protocolVersion().majorVersion(),
+			request.protocolVersion().minorVersion()),
+		status.code(),
+		status.reasonPhrase());
+
+	response.addHeader(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN.toString(), "*");
+	response.addHeader(HttpHeaderNames.ACCESS_CONTROL_MAX_AGE.toString(), ACCESS_CONTROL_MAX_AGE_DURATION);
+	response.addHeader(HttpHeaderNames.ACCESS_CONTROL_ALLOW_HEADERS.toString(), String.join(",", allowedHttpHeaders));
+	response.addHeader(HttpHeaderNames.ACCESS_CONTROL_ALLOW_METHODS.toString(), String.join(",", allowedHttpMethods));
+
+	if (message != null) {
+	    response.setEntity(new StringEntity(message));
+	}
+
+	return response;
     }
 }
