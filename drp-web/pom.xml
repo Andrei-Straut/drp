@@ -9,6 +9,8 @@
     <packaging>war</packaging>
 
     <properties>
+        <deploymentName>drp</deploymentName>
+        <wildfly-maven-plugin-version>1.1.0.Final</wildfly-maven-plugin-version>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -74,6 +76,19 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>${wildfly-maven-plugin-version}</version>
+                <configuration>
+                    <id>andrei-straut-wildfly</id>
+                    <name>${deploymentName}.war</name>
+                    <runtimeName>${deploymentName}.war</runtimeName>
+                    <force>true</force>
+                    <port>9993</port>
+                    <protocol>https-remoting</protocol>
+                </configuration>
             </plugin>
         </plugins>
     </build>
