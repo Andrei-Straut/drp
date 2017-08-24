@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/Andrei-Straut/drp.svg?branch=master)](https://travis-ci.org/Andrei-Straut/drp)
-[![Coverage Status](https://coveralls.io/repos/github/Andrei-Straut/drp/badge.svg?branch=master)](https://coveralls.io/github/Andrei-Straut/drp?branch=master)
+[![Build Status](https://img.shields.io/jenkins/s/https/www.andreistraut.info/jenkins/job/DRP-master.svg)](https://www.andreistraut.info/jenkins/job/DRP-master/) [![Tests](https://img.shields.io/jenkins/t/https/www.andreistraut.info/jenkins/job/DRP-master.svg)](https://www.andreistraut.info/jenkins/job/DRP-master/lastCompletedBuild/) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
 # DRP (Dynamic Reverse Proxy)
 
