@@ -1,3 +1,110 @@
+/*================================================================================================*/
+/*=========================================== ANIMATIONS =========================================*/
+/*================================================================================================*/
+@-moz-keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-o-keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+/*================================================================================================*/
+/*========================================= MASTER STYLES ========================================*/
+/*================================================================================================*/
+body,
+header,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.container {
+    color: white;
+}
+body,
+header,
+.container,
+div.jumbotron{
+    background: #335061;
+    overflow-x: hidden;
+}
+nav,
+.navbar-inverse {
+    background: #2C3E50;
+    color: white;
+}
+a,
+a:hover,
+a:focus,
+a:active,
+a.active {
+    color: #337ab7;
+}
+h2, h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+}
+body {
+    padding-top: 0px;
+    padding-bottom: 20px;
+    font-size: 21px;
+}
+.checkbox-inline,
+radio-inline,
+.bg-color-white span {
+    color: black;
+}
+.back-footer-green span {
+    color: white;
+}
 h1 {
     color: #369;
     font-family: Arial, Helvetica, sans-serif;
@@ -12,4 +119,329 @@ body {
 .col-minimal-padding {
     padding-left:5px;
     padding-right:5px;
+}
+/*================================================================================================*/
+/*============================================ NAVBAR ============================================*/
+/*================================================================================================*/
+
+.navbar {
+    margin-bottom: 0px;
+}
+.navbar-brand {
+    float: left;
+}
+.navbar-inverse {
+    float: left;
+}
+a.btn-navbar {
+    color: #9d9d9d;
+    padding: 15px 15px;
+    vertical-align: top;
+    text-decoration: none;
+}
+a.btn-navbar:hover {
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+@-webkit-keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+/* :not(:required) hides this rule from IE9 and below */
+.spinner:not(:required) {
+    -webkit-animation: spinner 1500ms infinite linear;
+    -moz-animation: spinner 1500ms infinite linear;
+    -ms-animation: spinner 1500ms infinite linear;
+    -o-animation: spinner 1500ms infinite linear;
+    animation: spinner 1500ms infinite linear;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    -ms-border-radius: 0.5em;
+    -o-border-radius: 0.5em;
+    border-radius: 0.5em;
+    -webkit-box-shadow: rgba(66, 139, 202, 1) 1.5em 0 0 0, rgba(66, 139, 202, 1) 1.1em 1.1em 0 0, rgba(66, 139, 202, 1) 0 1.5em 0 0, rgba(66, 139, 202, 1) -1.1em 1.1em 0 0, rgba(66, 139, 202, 1) -1.5em 0 0 0, rgba(66, 139, 202, 1) -1.1em -1.1em 0 0, rgba(66, 139, 202, 1) 0 -1.5em 0 0, rgba(66, 139, 202, 1) 1.1em -1.1em 0 0;
+    -moz-box-shadow: rgba(66, 139, 202, 1) 1.5em 0 0 0, rgba(66, 139, 202, 1) 1.1em 1.1em 0 0, rgba(66, 139, 202, 1) 0 1.5em 0 0, rgba(66, 139, 202, 1) -1.1em 1.1em 0 0, rgba(66, 139, 202, 1) -1.5em 0 0 0, rgba(66, 139, 202, 1) -1.1em -1.1em 0 0, rgba(66, 139, 202, 1) 0 -1.5em 0 0, rgba(66, 139, 202, 1) 1.1em -1.1em 0 0;
+    box-shadow: rgba(66, 139, 202, 1) 1.5em 0 0 0, rgba(66, 139, 202, 1) 1.1em 1.1em 0 0, rgba(66, 139, 202, 1) 0 1.5em 0 0, rgba(66, 139, 202, 1) -1.1em 1.1em 0 0, rgba(66, 139, 202, 1) -1.5em 0 0 0, rgba(66, 139, 202, 1) -1.1em -1.1em 0 0, rgba(66, 139, 202, 1) 0 -1.5em 0 0, rgba(66, 139, 202, 1) 1.1em -1.1em 0 0;
+    display: inline-block;
+    font-size: 4px;
+    width: 1em;
+    height: 1em;
+    margin: 1.5em;
+    overflow: hidden;
+    text-indent: 100%;
+}
+
+@media screen and (min-width: 1024px) {
+    div.container {
+        margin: 0 auto;
+        width: 100%;
+    }
+    div.sidePadded {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+@media screen and (max-width: 1024px) {
+    .col-md-3 {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    div.panel-primary {
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+    .visStatisticsTimeline .vis-panel.vis-center {
+        left:0px;
+        width: 100%;
+    }
+    .visStatisticsTimeline .vis-panel.vis-left {
+        display: none;
+    }
+}
+@media screen and (min-width: 1024px) {
+}
+
+.statisticsSection {
+    padding-top: 20px;
+}
+
+.left-aligned {
+    text-align: left;
+}
+span.wipSpan {
+    vertical-align: super;
+    color: #428bca;
+}
+
+div.box-content-box {
+    box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+}
+
+.fa-icon-green {
+    color: #419641;
+}
+.fa-icon-yellow {
+    color: #fbc02d;
+}
+.fa-icon-red {
+    color: red;
+}
+.bg-color-green {
+    background-color: #00CE6F;
+    color: #fff;
+}
+.bg-color-blue {
+    background-color: #A95DF0;
+    color: #fff;
+}
+.bg-color-red {
+    background-color: #DB0630;
+    color: #fff;
+}
+.bg-color-brown {
+    background-color: #B94A00;
+    color: #fff;
+}
+.back-footer-green {
+    background-color: #009B50;
+    border-top: 0px solid #fff;
+}
+.back-footer-red {
+    background-color: #AF0000;
+    border-top: 0px solid #fff;
+}
+.panel-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+.panel-body {
+    padding: 15px;
+    word-wrap: break-word; 
+}
+a.statisticsEntry {
+    color: white;
+}
+a.statisticsEntry:hover, a.statisticsEntry:focus {
+    color: #23527c;
+}
+.vr {
+    display:inline;
+    height:100%;
+    width:1px;
+    border:1px inset;
+    margin:5px
+}
+
+/*================================================================================================*/
+/*========================================== VIS STYLES ==========================================*/
+/*================================================================================================*/
+
+div.vis-tooltip {
+    max-width: 500px;
+    white-space: inherit;
+    word-wrap: break-word;
+}
+
+.vis-item .vis-item-content{
+    white-space: nowrap;
+    box-sizing: border-box;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.vis-item.white {
+    background-color: lightgray;
+    border-color: black;
+}
+
+.vis-item.green {
+    background-color: #00CE6F;
+    border-color: green;
+}
+
+.vis-item.yellow {
+    background-color: yellow;
+    border-color: green;
+}
+.vis-item.magenta {
+    background-color: magenta;
+    border-color: purple;
+    color: white;
+}
+.vis-item.orange {
+    background-color: gold;
+    border-color: orange;
+}
+/* create a custom sized dot at the bottom of the red item */
+.vis-item.red {
+    background-color: red;
+    border-color: darkred;
+    color: white;
+    box-shadow: 0 0 10px gray;
+}
+.vis-item.vis-dot.red {
+    border-radius: 10px;
+    border-width: 10px;
+}
+.vis-item.vis-line.red {
+    border-width: 5px;
+}
+.vis-item.vis-box.red {
+    border-radius: 0;
+    border-width: 2px;
+    font-size: 24pt;
+    font-weight: bold;
+}
+.vis-item.vis-selected.orange {
+    /* custom colors for selected orange items */
+    background-color: orange;
+    border-color: orangered;
+}
+
+/* our custom classes overrule the styles for selected events,
+   so lets define a new style for the selected events */
+.vis-item.vis-selected {
+    background-color: white;
+    border-color: black;
+    color: black;
+    box-shadow: 0 0 10px gray;
+}
+.vis-item.vis-background.negative {
+    background-color: rgba(255, 0, 0, 0.2);
+    overflow: visible;
+}
+.vis-item.vis-background.yellow-negative {
+    background-color: rgb(244, 217, 66);
+    overflow: visible;
+}
+.vis-group-white {
+    fill: #FFFFFF;
+}
+.vis-group-green {
+    fill: #00CE6F;
+}
+.vis-group-yellow {
+    fill: yellow;
+}
+.vis-group-red {
+    fill: red;
+}
+.vis-build-result-span {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.vis-build-result-span.green {
+    background-color: green;
+    color: white;
+}
+.vis-build-result-span.yellow {
+    background-color: yellow;
+    color: black;
+}
+.vis-build-result-span.red {
+    background-color: red;
+    color: black;
+}
+.progress-wrapper {
+    background: white;
+    width: 100%;
+    height: 18px;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid black;
+}
+.progress {
+    height: 100%;
+    width: 60%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    color: white;
+    border-radius: initial
+}
+.progress-yellow {
+    background: #ffff0040;
+}
+.progress-green {
+    background: #00ce6f40;
+    text-align: right;
+}
+.progress-label {
+    position: absolute;
+    padding-left: 2px;
+    padding-right: 2px;
+    color: black;
+    font-weight: initial;
+    z-index: 1;
+}
+.progress-label-yellow {
+}
+.progress-label-green {
+    right: 0px;
+}
+.btn-fullscreen-toggle {
+    float: right;
+    cursor: pointer;
+}
+.btn-fullscreen-toggle-highlight {
+    text-shadow: 0px 0px 15px white;
 }
