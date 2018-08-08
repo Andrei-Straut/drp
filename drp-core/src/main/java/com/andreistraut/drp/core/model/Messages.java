@@ -3,7 +3,7 @@ package com.andreistraut.drp.core.model;
 
 public class Messages {
     
-    public static final String UNSUPPORTED_HTTP_METHOD = "HTTP Method is not supported. Supported HTTP Methods are: %s";
+    public static final String UNSUPPORTED_HTTP_METHOD = "HTTP Method is not supported. Supported HTTP Methods are: %s, %s";
     public static final String ENDPOINT_URL_MUST_BE_PROVIDED = "Endpoint URL must be provided";
     public static final String ENDPOINT_URL_MUST_BE_VALID = "Endpoint URL must be a valid URL";
     public static final String HTTP_METHOD_MUST_BE_SPECIFIED = "An HTTP Method must be specified";
@@ -15,5 +15,5 @@ public class Messages {
     public static final String STATUS_CANNOT_BE_NULL_ERROR = "ProxyResponse status cannot be null";
     public static final String HEADER_CANNOT_BE_NULL_ERROR = "ProxyResponse header name or header value cannot be null";
     public static final String HEADER_CANNOT_BE_EMPTY_ERROR = "ProxyResponse header name or header value cannot be empty string";
-    public static final String ONLY_GET_POST_METHODS_SUPPORTED = "Only GET and POST methods are supported";
+    public static final String ONLY_GET_POST_PUT_METHODS_SUPPORTED = "Only GET, POST and PUT methods are supported";
 }
