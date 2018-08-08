@@ -8,10 +8,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.HttpHeaderNames;
-import io.netty.handler.codec.http.HttpHeaders;
-import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
 
 import java.io.IOException;
@@ -117,12 +114,16 @@ public class RequestTranslator {
                 continue;
             }
 
-            request.addHeader(header.getKey(), header.getValue());
+            request.addHeader(header.getKey().toLowerCase().trim(), header.getValue());
         }
+
+        String contentType = headers.containsKey(HttpHeaderNames.CONTENT_TYPE.toString())
+                ? headers.get(HttpHeaderNames.CONTENT_TYPE.toString())
+                : HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString();
 
         /** If request is POST or other request type that contains a body, set it */
         if (HttpEntityEnclosingRequest.class.isInstance(request) && requestObject.has(Fields.REQUEST)) {
-            String requestBody = parseRequestBody(requestObject.get(Fields.REQUEST));
+            String requestBody = parseRequestBody(requestObject.get(Fields.REQUEST), contentType);
             HttpEntityEnclosingRequest.class.cast(request).setEntity(new StringEntity(requestBody));
         }
 
@@ -456,7 +457,7 @@ public class RequestTranslator {
         return headers;
     }
 
-    private String parseRequestBody(JsonElement requestBody) throws UnsupportedEncodingException {
+    private String parseRequestBody(JsonElement requestBody, String type) throws UnsupportedEncodingException {
         StringBuilder builder = new StringBuilder();
 
         if (requestBody.isJsonPrimitive()) {
@@ -469,14 +470,19 @@ public class RequestTranslator {
             }
 
         } else if (requestBody.isJsonObject()) {
-            for (Map.Entry<String, JsonElement> requestParameter : requestBody.getAsJsonObject().entrySet()) {
 
-                if (requestParameter.getValue().isJsonPrimitive()
-                        || requestParameter.getValue().isJsonObject()) {
-                    builder.append(URLEncoder.encode(requestParameter.getKey(), "UTF-8")).append("=")
-                            .append(URLEncoder.encode(requestParameter.getValue().getAsString(), "UTF-8"));
+            if(type.toLowerCase().trim().equals(HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString().toLowerCase().trim())) {
+                for (Map.Entry<String, JsonElement> requestParameter : requestBody.getAsJsonObject().entrySet()) {
 
+                    if (requestParameter.getValue().isJsonPrimitive()
+                            || requestParameter.getValue().isJsonObject()) {
+                        builder.append(URLEncoder.encode(requestParameter.getKey(), "UTF-8")).append("=")
+                                .append(URLEncoder.encode(requestParameter.getValue().getAsString(), "UTF-8"));
+
+                    }
                 }
+            } else if(type.toLowerCase().trim().equals(HttpHeaderValues.APPLICATION_JSON.toString().toLowerCase().trim())) {
+                builder.append(requestBody.getAsJsonObject());
             }
         }
 

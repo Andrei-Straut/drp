@@ -15,6 +15,7 @@ public class LocalHttpServerInitializer extends ChannelInitializer<SocketChannel
     @Override
     public void initChannel(SocketChannel ch) {
         ChannelPipeline p = ch.pipeline();
+
         p.addLast(new HttpRequestDecoder());
         // Uncomment the following line if you don't want to handle HttpChunks.
         p.addLast(new HttpObjectAggregator(1048576));

@@ -11,20 +11,16 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaderNames;
-import io.netty.handler.codec.http.HttpHeaderValues;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.util.CharsetUtil;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import static io.netty.handler.codec.http.HttpVersion.*;
 
@@ -38,9 +34,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.DefaultHttpResponseFactory;
 import org.apache.http.message.BasicHttpResponse;
-import org.apache.http.protocol.HttpCoreContext;
 
 /**
  * Handler for local Netty-based server
@@ -147,22 +141,6 @@ public class LocalHttpServerHandler extends SimpleChannelInboundHandler<FullHttp
         return Optional.ofNullable(headers);
     }
 
-    private Optional<Map<String, List<String>>> parseParameters(FullHttpRequest message) {
-
-        Map<String, List<String>> params = Maps.<String, List<String>>newHashMap();
-
-        QueryStringDecoder queryStringDecoder = new QueryStringDecoder(message.uri());
-        Map<String, List<String>> queryParams = queryStringDecoder.parameters();
-
-        if (!queryParams.isEmpty()) {
-            for (Entry<String, List<String>> param : queryParams.entrySet()) {
-                params.put(param.getKey(), param.getValue());
-            }
-        }
-
-        return Optional.ofNullable(params);
-    }
-
     private Optional<String> parseContent(FullHttpRequest request) {
         if (request.content().isReadable()) {
             return Optional.ofNullable(request.content().toString(CharsetUtil.UTF_8));
@@ -179,16 +157,13 @@ public class LocalHttpServerHandler extends SimpleChannelInboundHandler<FullHttp
 
         FullHttpResponse response = new DefaultFullHttpResponse(
                 HTTP_1_1, HttpResponseStatus.parseLine(proxyResponse.getStatusLine().getStatusCode() + ""),
-                Unpooled.copiedBuffer(messageContent, CharsetUtil.UTF_8));
+                Unpooled.copiedBuffer(messageContent, CharsetUtil.UTF_8), false);
 
         for (Header header : proxyResponse.getAllHeaders()) {
             response.headers().set(header.getName(), header.getValue());
         }
 
-        response.headers().set(HttpHeaderNames.CONTENT_LENGTH, messageContent.length());
-        FullHttpResponse fullResponse = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, response.content());
-
-        ctx.writeAndFlush(fullResponse).addListener(ChannelFutureListener.CLOSE);
+        ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
     }
 
     @Override
