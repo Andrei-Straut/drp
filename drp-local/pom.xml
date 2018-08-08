@@ -5,7 +5,7 @@
     <groupId>com.andreistraut.drp</groupId>
     <artifactId>drp-local</artifactId>
     <name>DynamicReverseProxyLocal</name>
-    <version>1.0</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
 	
     <properties>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.andreistraut.drp</groupId>
             <artifactId>drp-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
