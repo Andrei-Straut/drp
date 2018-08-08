@@ -46,7 +46,8 @@ public class LocalHttpServerHandler extends SimpleChannelInboundHandler<FullHttp
             HttpMethod.OPTIONS.name(),
             HttpMethod.GET.name(),
             HttpMethod.POST.name(),
-            HttpMethod.PATCH.name());
+            HttpMethod.PATCH.name(),
+            HttpMethod.PUT.name());
 
     private final List<String> allowedHttpHeaders = Lists.newArrayList(
             HttpHeaderNames.AUTHORIZATION.toString(),
@@ -66,14 +67,14 @@ public class LocalHttpServerHandler extends SimpleChannelInboundHandler<FullHttp
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws IOException {
 
-        if (request.method() != HttpMethod.POST && request.method() != HttpMethod.OPTIONS) {
+        if (request.method() != HttpMethod.POST && request.method() != HttpMethod.PUT && request.method() != HttpMethod.OPTIONS) {
             HttpResponse response = new BasicHttpResponse(
                     new ProtocolVersion(
                             request.protocolVersion().protocolName(),
                             request.protocolVersion().majorVersion(),
                             request.protocolVersion().minorVersion()),
                     HttpResponseStatus.FORBIDDEN.code(),
-                    String.format(Messages.UNSUPPORTED_HTTP_METHOD, HttpMethod.POST.toString()));
+                    String.format(Messages.UNSUPPORTED_HTTP_METHOD, HttpMethod.POST.toString(), HttpMethod.PUT.toString()));
             writeResponse(request, response, ctx);
             return;
         }

@@ -28,6 +28,7 @@ import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
@@ -333,8 +334,10 @@ public class RequestTranslator {
             return new HttpGet(endpoint);
         } else if (method.name().equals(HttpMethod.POST.name())) {
             return new HttpPost(endpoint);
+        } else if (method.name().equals(HttpMethod.PUT.name())) {
+            return new HttpPut(endpoint);
         } else {
-            throw new IllegalArgumentException(Messages.ONLY_GET_POST_METHODS_SUPPORTED);
+            throw new IllegalArgumentException(Messages.ONLY_GET_POST_PUT_METHODS_SUPPORTED);
         }
     }
 
@@ -372,7 +375,7 @@ public class RequestTranslator {
             }
 
             if (method != null && !SUPPORTED_HTTP_METHODS.contains(method)) {
-                this.errorLog.addValidationError(Messages.ONLY_GET_POST_METHODS_SUPPORTED);
+                this.errorLog.addValidationError(Messages.ONLY_GET_POST_PUT_METHODS_SUPPORTED);
                 valid = false;
             }
         }
@@ -470,7 +473,6 @@ public class RequestTranslator {
             }
 
         } else if (requestBody.isJsonObject()) {
-
             if(type.toLowerCase().trim().equals(HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString().toLowerCase().trim())) {
                 for (Map.Entry<String, JsonElement> requestParameter : requestBody.getAsJsonObject().entrySet()) {
 
@@ -482,7 +484,11 @@ public class RequestTranslator {
                     }
                 }
             } else if(type.toLowerCase().trim().equals(HttpHeaderValues.APPLICATION_JSON.toString().toLowerCase().trim())) {
-                builder.append(requestBody.getAsJsonObject());
+                JsonObject object = new JsonObject();
+                for (Map.Entry<String, JsonElement> requestParameter : requestBody.getAsJsonObject().entrySet()) {
+                    object.add(requestParameter.getKey(), requestParameter.getValue());
+                }
+                builder.append(object);
             }
         }
 
